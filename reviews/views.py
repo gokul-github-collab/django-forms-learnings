@@ -1,12 +1,10 @@
 from typing import Any, Dict
-
 from django.db.models.query import QuerySet
 from .models import Review
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
 from .forms import ReviewForm
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from .models import Review
 # Create your views here.
 

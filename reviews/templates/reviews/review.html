@@ -5,16 +5,28 @@
 Review Page
 {% endblock %}
 {% block content %}
+<section id="review-form">
     <form action="/" method="POST">
         {% csrf_token %}
-        {% for field in form %}
-        <div class="form-control {% if field.errors %} errors {% endif %}">
-            {{field.label_tag}}
-            {{field}}
-            {{field.errors}}  
-        </div>
-        {% endfor %}
-        <button type="submit">Send</button>
-    </form>
-{% endblock %}
 
+        <div class="mb-3">
+            <label for="userinputname" class="form-label">{{review.user_name}}</label>
+            <input type="text" class="form-control" name="user_name" id="userinputname" value="{{ review.user_name }}">
+            <div id="textHelp" class="form-text">Enter your name below 100 characters</div>
+        </div>
+        <div class="mb-3">
+            <label for="userReviewText" class="form-label">{{review.review_text}}</label>
+            <textarea class="form-control form-control-lg" rows="3" name="review_text"
+                id="userReviewText">{{ review.review_text }}</textarea>
+            <!-- <div id="textHelp" class="form-text">Enter your review below 100 characters</div> -->
+        </div>
+        <div class="mb-3">
+            <label for="userRating" class="form-label">{{review.rating}}</label>
+            <input type="number" name="user_rating" id="userRating" min="1" max="5" value="{{ review.user_rating }}">
+            <div id="textHelp" class="form-text">Enter your rating between 1-5</div>
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+
+</section>
+{% endblock %}

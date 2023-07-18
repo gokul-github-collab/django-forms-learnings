@@ -6,6 +6,7 @@ from .forms import ReviewForm
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from .models import Review
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 
@@ -47,3 +48,18 @@ class ReviewListView(ListView):
 class ReviewDetailView(DetailView):
     template_name = "reviews/review_detail.html"
     model = Review
+
+
+def store_file(file):
+    with open("temp/image.png", "wb+") as dest:
+        for chunk in file.chunks():
+            dest.write(chunk)
+
+
+class CreateProfileView(View):
+    def get(self, request):
+        return render(request, "profiles/create_profile.html")
+
+    def post(self, request):
+        store_file(request.FILES['image'])
+        return HttpResponseRedirect("/profiles")

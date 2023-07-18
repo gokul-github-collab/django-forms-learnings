@@ -6,9 +6,9 @@ from django.http import HttpResponseRedirect
 
 
 def store_file(file):
-    with open("temp/image.jpg", "wb+") as dest:
+    with open("temp/image.jpg", "wb+") as destination:
         for chunk in file.chunks():
-            dest.write(chunk)
+            destination.write(chunk)
 
 
 class CreateProfileView(View):

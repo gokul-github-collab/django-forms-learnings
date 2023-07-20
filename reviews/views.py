@@ -1,4 +1,5 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+from django.db import models
 from django.db.models.query import QuerySet
 from .models import Review
 from django.shortcuts import render
@@ -17,13 +18,6 @@ class ReviewView(CreateView):
     template_name = "reviews/review.html"
     success_url = "/thank-you"
 
-    # def post(self, request):
-    #     form = ReviewForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         return HttpResponseRedirect("/thank-you")
-    #     return render(request, "reviews/review.html", {"form": form})
-
 
 class ThankYouView(TemplateView):
     template_name = "reviews/thank_you.html"
@@ -39,27 +33,23 @@ class ReviewListView(ListView):
     model = Review
     context_object_name = "reviews"
 
-    # def get_queryset(self) -> QuerySet[Any]:
-    #     query = super().get_queryset()
-    #     data = query.filter(rating__gt=4)
-    #     return data
+
+class AddFavoriteView(View):
+    def post(self, request):
+        review_id = request.POST["review_id"]
+        # fav_review = Review.objects.get(pk=review_id)
+        request.session["favorite_review"] = review_id
+        return HttpResponseRedirect("/reviews/" + review_id)
 
 
 class ReviewDetailView(DetailView):
     template_name = "reviews/review_detail.html"
     model = Review
 
-
-def store_file(file):
-    with open("temp/image.png", "wb+") as dest:
-        for chunk in file.chunks():
-            dest.write(chunk)
-
-
-class CreateProfileView(View):
-    def get(self, request):
-        return render(request, "profiles/create_profile.html")
-
-    def post(self, request):
-        store_file(request.FILES['image'])
-        return HttpResponseRedirect("/profiles")
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        loaded_review = self.object
+        request = self.request
+        favorite_id = request.session.get("favorite_review")
+        context["is_favorite"] = favorite_id == str(loaded_review.id)
+        return context
